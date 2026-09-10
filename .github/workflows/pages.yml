@@ -1,0 +1,73 @@
+name: Deploy demos to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+
+      - name: Assemble site
+        run: |
+          mkdir -p _site/demo _site/src/css _site/dist
+          cp -r demo/. _site/demo/
+          cp -r src/css/. _site/src/css/
+          cp -r dist/. _site/dist/
+          cat > _site/index.html <<'HTML'
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Richman Gallery — demos</title>
+            <style>
+              body { font-family: Inter, system-ui, sans-serif; max-width: 640px; margin: 60px auto; padding: 0 24px; }
+              h1 { font-size: 22px; }
+              a { display: block; margin: 10px 0; font-size: 16px; }
+            </style>
+          </head>
+          <body>
+            <h1>Richman Gallery — demos</h1>
+            <a href="./demo/">Overview demo — grid, lightbox, multi-select, dynamic add, likes &amp; comments</a>
+            <a href="./demo/all-features.html">All-features demo — one gallery, every feature, callbacks logged</a>
+          </body>
+          </html>
+          HTML
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

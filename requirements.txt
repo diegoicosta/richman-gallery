@@ -1,0 +1,10 @@
+# Project dependency list — mirror of package.json devDependencies.
+# This file is informational (tracks the exact node library pins the project
+# uses). Node tooling does not read it; npm installs from package.json.
+# Install command: npm install
+#
+# vitest             == 5.0.0
+# jsdom              == 30.0.1
+# @vitest/coverage-v8 == 5.0.0
+# typescript         == 7.0.2
+# vite               == 8.2.2

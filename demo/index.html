@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Richman Gallery — basic demo</title>
+  <link rel="stylesheet" href="../src/css/richman-gallery.css">
+  <style>
+    body { font-family: Inter, system-ui, sans-serif; margin: 0; padding: 24px; background: #fafafa; }
+    h1 { font-size: 22px; }
+    p.hint { color: #555; font-size: 14px; max-width: 640px; }
+    .page { max-width: 1000px; margin: 0 auto; }
+    h2 { font-size: 17px; margin: 28px 0 4px; }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <h1>Richman Gallery</h1>
+    <p class="hint">
+      Four galleries demonstrating the library: different column starting
+      points (the library owns the responsive stepping below each), multi-select
+      with a per-gallery selection bar, dynamic insertion &amp;
+      reinitialization, and likes &amp; comments with their callbacks. Resize
+      the window to see the grids step down. Click any photo to open the
+      fullscreen viewer.
+    </p>
+    <p class="hint">
+      The three photo-link possibilities are shown in the viewer:
+      <strong>photo 4</strong> — <code>linkTo</code> with a title and no
+      <code>linkText</code>, so the title becomes the link;
+      <strong>photo 9</strong> — <code>linkTo</code> + <code>linkText</code>,
+      showing the title plus a link labeled "View photo";
+      <strong>photo 10</strong> — <code>linkTo</code> with neither
+      <code>linkText</code> nor title, falling back to "(open)".
+    </p>
+
+    <h2>Wide gallery — starts at 4 columns</h2>
+    <div class="rmg-gallery" data-columns="4">
+      <div class="rmg-grid">
+        <img src="img/photo1.svg" data-id="p1" tags="50mm; Paris" title="Sunset over the hills by Ana">
+        <img src="img/photo2.svg" data-id="p2" tags="85mm; f/1.8" title="Morning fog by Ben">
+        <img src="img/photo3.svg" data-id="p3">
+        <img src="img/photo4.svg" data-id="p4" tags="24mm; night" linkTo="https://example.com/p4" title="City lights">
+        <img src="img/photo5.svg" data-id="p5">
+        <img src="img/photo6.svg" data-id="p6" title="River bend by Ceci">
+      </div>
+    </div>
+
+    <h2>Compact gallery — starts at 2 columns</h2>
+    <p class="hint">
+      This gallery has multi-select enabled. Click the circle markers to select
+      or unselect; the bar sits at the bottom of <em>this</em> gallery and only
+      appears while there is a selection. The <code>onSelect</code> /
+      <code>onUnselect</code> events are logged below.
+    </p>
+    <div class="rmg-gallery" id="compact-gallery" data-columns="2" data-multiselect-enabled="true" data-show-order-numbers>
+      <div class="rmg-grid">
+        <img src="img/photo7.svg" data-id="p7" tags="desert; dunes" title="Dune lines">
+        <img src="img/photo8.svg" data-id="p8">
+        <img src="img/photo9.svg" data-id="p9" tags="astro; long-exposure" linkTo="https://example.com/p9" linkText="View photo" title="Night sky">
+        <img src="img/photo10.svg" data-id="p10" linkTo="https://example.com/p10">
+      </div>
+    </div>
+
+    <p class="hint">
+      These buttons call the per-gallery selection API on the compact gallery:
+      <code>selectAll()</code>, <code>unselectAll()</code> and
+      <code>toggleSelectionMode()</code>.
+    </p>
+    <div style="margin: 8px 0 20px; display: flex; gap: 8px;">
+      <button id="btn-select-all">selectAll()</button>
+      <button id="btn-unselect-all">unselectAll()</button>
+      <button id="btn-toggle-mode">toggleSelectionMode()</button>
+    </div>
+
+    <h2>Selection events</h2>
+    <p class="hint" id="selection-log" style="font-family: monospace;">—</p>
+
+    <h2>Dynamic gallery — full insertion &amp; reinitialization</h2>
+    <p class="hint">
+      This section starts empty. <strong>Insert a gallery</strong> appends a
+      complete <code>.rmg-gallery</code> to the page — the library notices it
+      and initializes it automatically (click-to-open, tags and likes all work
+      immediately). <strong>Replace images</strong> swaps the grid's images and
+      calls <code>reinitialize()</code> so the new images become interactive.
+    </p>
+    <div style="margin: 8px 0; display: flex; gap: 8px;">
+      <button id="btn-insert-gallery">Insert a gallery</button>
+      <button id="btn-replace-images" disabled>Replace images + reinitialize()</button>
+    </div>
+    <p class="hint" id="dynamic-status" style="font-family: monospace;">—</p>
+    <div id="dynamic-host"></div>
+
+    <h2>Reactions gallery — likes &amp; comments</h2>
+    <p class="hint">
+      This gallery has likes and comments enabled, and sits markers in the
+      bottom-right corner. Some photos start pre-liked
+      (<code>data-liked="true"</code>). Click a heart to like/unlike, or a
+      bubble to comment — both are reported through the
+      <code>onLike</code> / <code>onComments</code> callbacks and logged below.
+    </p>
+    <p class="hint">
+      The heart is <strong>stateful</strong>: it updates immediately
+      (optimistic), and the page can roll the change back. Tick the box to
+      simulate a failed save and watch <code>setLiked()</code> restore the
+      previous state. Comments are <strong>stateless</strong> — clicking the
+      bubble changes nothing in the viewer; it only notifies the page.
+    </p>
+    <label class="hint">
+      <input type="checkbox" id="simulate-failure">
+      Simulate a failed like save (roll back with setLiked)
+    </label>
+    <div class="rmg-gallery" id="reactions-gallery" data-columns="3" data-like-enabled="true" data-comments-enabled="true" data-like-position="bottom-right">
+      <div class="rmg-grid">
+        <img src="img/photo1.svg" data-id="r1" data-liked="true" title="Already liked">
+        <img src="img/photo2.svg" data-id="r2" title="Like me">
+        <img src="img/photo3.svg" data-id="r3" data-liked="true" title="Already liked too">
+        <img src="img/photo4.svg" data-id="r4" title="Comment me">
+      </div>
+    </div>
+
+    <h2>Reaction events</h2>
+    <p class="hint" id="reaction-log" style="font-family: monospace;">—</p>
+  </div>
+
+  <script>
+    const log = [];
+    const logEl = document.getElementById('selection-log');
+    const render = () => { logEl.textContent = log.join('  ') || '—'; };
+
+    const reactionLog = [];
+    const reactionLogEl = document.getElementById('reaction-log');
+    const renderReactions = () => { reactionLogEl.textContent = reactionLog.join('  ') || '—'; };
+
+    const simulateFailure = document.getElementById('simulate-failure');
+
+    window.GRID_GALLERY_HOOKS = {
+      onSelect: (id) => { log.push('select ' + id); render(); },
+      onUnselect: (id) => { log.push('unselect ' + id); render(); },
+      onLike: (id, liked) => {
+        reactionLog.push('like ' + id + '=' + liked);
+        const inReactions = document.querySelector('#reactions-gallery img[data-id="' + id + '"]');
+        if (simulateFailure.checked && inReactions) {
+          // The like already changed optimistically; the page can restore the
+          // previous state when persistence fails.
+          window.GridGallery.get('#reactions-gallery').setLiked(id, !liked);
+          reactionLog.push('rollback ' + id + '=' + !liked);
+        }
+        renderReactions();
+      },
+      onComments: (id) => {
+        reactionLog.push('comment ' + id);
+        renderReactions();
+      }
+    };
+
+    const compactGallery = () => window.GridGallery.get('#compact-gallery');
+    document.getElementById('btn-select-all').addEventListener('click', () => compactGallery().selectAll());
+    document.getElementById('btn-unselect-all').addEventListener('click', () => compactGallery().unselectAll());
+    document.getElementById('btn-toggle-mode').addEventListener('click', () => compactGallery().toggleSelectionMode());
+
+    const dynHost = document.getElementById('dynamic-host');
+    const dynStatus = document.getElementById('dynamic-status');
+    const replaceBtn = document.getElementById('btn-replace-images');
+    const setDynStatus = (msg) => { dynStatus.textContent = msg; };
+
+    const firstSet = `
+      <img src="img/photo1.svg" data-id="d1" tags="dynamic; fresh" title="Inserted one">
+      <img src="img/photo2.svg" data-id="d2">
+      <img src="img/photo3.svg" data-id="d3" tags="inserted" title="Inserted three">
+    `;
+    const secondSet = `
+      <img src="img/photo5.svg" data-id="d10" tags="replaced; new" title="Replacement A">
+      <img src="img/photo6.svg" data-id="d11">
+      <img src="img/photo7.svg" data-id="d12" tags="second set">
+      <img src="img/photo8.svg" data-id="d13" title="Replacement D">
+    `;
+
+    document.getElementById('btn-insert-gallery').addEventListener('click', () => {
+      dynHost.innerHTML = `
+        <div class="rmg-gallery" id="dynamic-gallery" data-columns="3" data-like-enabled="true" data-like-position="bottom-right">
+          <div class="rmg-grid">${firstSet}</div>
+        </div>`;
+      replaceBtn.disabled = false;
+      setDynStatus('inserted a full .rmg-gallery — the library auto-initialized it');
+    });
+
+    replaceBtn.addEventListener('click', () => {
+      const container = document.getElementById('dynamic-gallery');
+      if (!container) return;
+      container.querySelector('.rmg-grid').innerHTML = secondSet;
+      window.GridGallery.get(container).reinitialize();
+      setDynStatus('images replaced, reinitialize() called — new images are live');
+    });
+  </script>
+  <script src="../dist/richman-gallery.min.js"></script>
+</body>
+</html>

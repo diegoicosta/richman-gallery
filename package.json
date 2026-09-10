@@ -1,0 +1,19 @@
+{
+  "name": "richman-gallery",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Feature-behavior contract tests for Richman Gallery (grid + lightbox batch).",
+  "type": "module",
+  "scripts": {
+    "build": "vite build",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "5.0.0",
+    "jsdom": "30.0.1",
+    "typescript": "7.0.2",
+    "vite": "8.2.2",
+    "vitest": "5.0.0"
+  }
+}

@@ -1,0 +1,340 @@
+.rmg-gallery {
+  position: relative;
+  --main-color: #000;
+  --secondary-color: #111;
+  --txt-color: #fff;
+  --img-bg-color: rgba(240, 240, 240, 0.9);
+  --backdrop-color: rgba(240, 240, 240, 0.9);
+  --gap-length: 2px;
+}
+
+.rmg-grid {
+  /* CSS Columns for true masonry layout */
+  column-gap: var(--gap-length);
+  margin: 20px 0;
+}
+
+/* Responsive column counts — driven by the data-columns starting point.
+   The library owns the breakpoints and steps the count down from the
+   starting value: each gallery states only its wide-screen starting count
+   (data-columns="1" … "6"); the counts below are static, never configured. */
+.rmg-gallery[data-columns="6"] .rmg-grid { column-count: 6; }
+.rmg-gallery[data-columns="5"] .rmg-grid { column-count: 5; }
+.rmg-gallery[data-columns="4"] .rmg-grid { column-count: 4; }
+.rmg-gallery[data-columns="3"] .rmg-grid { column-count: 3; }
+.rmg-gallery[data-columns="2"] .rmg-grid { column-count: 2; }
+.rmg-gallery[data-columns="1"] .rmg-grid { column-count: 1; }
+
+@media (max-width: 992px) {
+  .rmg-gallery[data-columns="6"] .rmg-grid { column-count: 5; }
+  .rmg-gallery[data-columns="5"] .rmg-grid { column-count: 4; }
+  .rmg-gallery[data-columns="4"] .rmg-grid { column-count: 3; }
+  .rmg-gallery[data-columns="3"] .rmg-grid { column-count: 2; }
+  .rmg-gallery[data-columns="2"] .rmg-grid { column-count: 1; }
+  .rmg-gallery[data-columns="1"] .rmg-grid { column-count: 1; }
+}
+
+@media (max-width: 768px) {
+  .rmg-gallery[data-columns="6"] .rmg-grid { column-count: 4; }
+  .rmg-gallery[data-columns="5"] .rmg-grid { column-count: 3; }
+  .rmg-gallery[data-columns="4"] .rmg-grid { column-count: 2; }
+  .rmg-gallery[data-columns="3"] .rmg-grid { column-count: 2; }
+  .rmg-gallery[data-columns="2"] .rmg-grid { column-count: 1; }
+  .rmg-gallery[data-columns="1"] .rmg-grid { column-count: 1; }
+}
+
+@media (max-width: 480px) {
+  .rmg-gallery[data-columns] .rmg-grid { column-count: 1; }
+}
+
+.rmg-grid img {
+  object-fit: contain;
+  cursor: pointer;
+  width: 100%;
+  height: auto;
+  background: var(--img-bg-color);
+  display: block;
+  margin-bottom: var(--gap-length);
+  break-inside: avoid; /* Prevent images from being split across columns */
+}
+
+.rmg-grid img:hover {
+  opacity: 0.98;
+}
+
+#rmg-screen {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--backdrop-color);
+  z-index: 9999;
+}
+
+/* Shrink-wraps the enlarged image so the title overlay can anchor to the
+   image's own bottom edge (not the bottom of the screen). */
+.rmg-image {
+  position: relative;
+  display: inline-block;
+  line-height: 0;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.rmg-image img {
+  display: block;
+  max-width: 100vw;
+  max-height: 100vh;
+  width: auto;
+  height: auto;
+  margin: 0 auto;
+}
+
+.rmg-title-container {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  width: 80%;
+  max-width: 600px;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 10px 15px;
+  border-radius: 5px;
+  color: #fff;
+  font-size: 0.8rem;
+  line-height: normal;
+  cursor: text;
+  user-select: text;
+}
+
+.rmg-title-container a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.rmg-btn {
+  width: 35px;
+  height: 35px;
+  background: var(--main-color);
+  color: var(--txt-color);
+  text-align: center;
+  line-height: 35px;
+  cursor: pointer;
+  -moz-transition: all 0.4s ease;
+  -o-transition: all 0.4s ease;
+  -webkit-transition: all 0.4s ease;
+  transition: all 0.4s ease;
+  font-size: 20px;
+  box-sizing: border-box;
+  padding-left: 2px;
+  position: fixed;
+  bottom: 10px;
+}
+
+.rmg-btn:hover {
+  background: var(--secondary-color);
+}
+
+.rmg-close {
+  top: 10px;
+}
+
+.rmg-close,
+.rmg-next {
+  right: 10px;
+}
+
+.rmg-prev {
+  right: 50px;
+}
+
+.rmg-prev,
+.rmg-next {
+  bottom: 10px;
+}
+
+/* ===== MULTI-SELECT MODE STYLES ===== */
+
+/* Dim the image based on selection class (The only visual feedback) */
+img.rmg-selected {
+  opacity: 0.6; /* 40% transparency (60% opacity) */
+  transition: opacity 0.2s;
+}
+
+/* CRITICAL FIX: Ensure hover does not interfere with click-based selection opacity
+   when multi-select mode is enabled. */
+.rmg-gallery[data-multiselect-enabled] .rmg-grid img:hover {
+  opacity: 1; /* Reset default hover opacity for non-selected images */
+}
+
+.rmg-gallery[data-multiselect-enabled] img.rmg-selected:hover {
+  opacity: 0.6; /* Keep selected image dimmed even when hovered */
+}
+
+/* ===== CIRCLE SELECTION MARKER STYLES ===== */
+
+/* Circle markers added by JavaScript */
+.rmg-circle-marker {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: 24px;
+  height: 24px;
+  border: 2px solid #FF5722;
+  border-radius: 50%;
+  background: white;
+  z-index: 100; /* above tags (10), below modals (400) and the multi-select bar (500) */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+}
+
+.rmg-circle-marker.selected {
+  background: #4CAF50;
+  border-color: #388E3C;
+  color: white;
+}
+
+.rmg-circle-marker:hover {
+  transform: scale(1.2);
+  background: #FF9800;
+  border-color: #F57C00;
+  color: white;
+}
+
+.rmg-circle-marker.selected:hover {
+  background: #45a049;
+  border-color: #2E7D32;
+  color: white;
+}
+
+/* Image wrapper for positioning */
+.rmg-image-wrapper {
+  position: relative;
+  display: block;
+  width: 100%;
+  break-inside: avoid; /* Keep wrapper and image together in columns */
+}
+
+/* ===== LIKE (HEART) MARKER STYLES ===== */
+/* States use distinct emoji (self-colored, CSS cannot tint them):
+   \u{1F90D} white heart = not liked, U+2764 U+FE0F red heart = liked */
+
+.rmg-like-marker {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: 28px;
+  height: 28px;
+  z-index: 100; /* must stay below the Spectre modal (400) so overlays cover the grid */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  line-height: 1;
+  transition: transform 0.2s ease;
+  filter: opacity(65%);
+}
+
+.rmg-like-marker:hover {
+  transform: scale(1.3);
+}
+
+.rmg-like-marker.liked {
+  filter: opacity(85%);
+  transform: scale(1.2);
+}
+
+/* Alternative position for galleries without tags at the bottom */
+.rmg-gallery[data-like-position="bottom-right"] .rmg-like-marker {
+  top: auto;
+  left: auto;
+  bottom: 8px;
+  right: 8px;
+}
+
+/* ===== COMMENT MARKER STYLES ===== */
+/* Stateless single glyph (U+1F4AC speech bubble), positioned beside the
+   heart in the same corner (follows data-like-position). */
+
+.rmg-comment-marker {
+  position: absolute;
+  top: 8px;
+  left: 40px; /* heart occupies left:8px + 28px width */
+  width: 28px;
+  height: 28px;
+  z-index: 100; /* same layering rule as the heart: below modal (400) */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  line-height: 1;
+  transition: transform 0.2s ease;
+  filter: opacity(65%);
+}
+
+.rmg-comment-marker:hover {
+  transform: scale(1.3);
+}
+
+/* Without a heart beside it, take the heart's slot */
+.rmg-gallery:not([data-like-enabled]) .rmg-comment-marker {
+  left: 8px;
+}
+
+.rmg-gallery[data-like-position="bottom-right"] .rmg-comment-marker {
+  top: auto;
+  left: auto;
+  bottom: 8px;
+  right: 40px; /* mirrored: heart occupies right:8px + 28px width */
+}
+
+.rmg-gallery[data-like-position="bottom-right"]:not([data-like-enabled]) .rmg-comment-marker {
+  right: 8px;
+}
+
+/* ===== TAG STYLES ===== */
+
+.rmg-image-wrapper > .rmg-all-tags {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.rmg-all-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 8px;
+}
+
+.rmg-tag {
+  background-color: hsla(127, 66%, 28%, 0.70);
+  color: white;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 500;
+  white-space: nowrap;
+  backdrop-filter: blur(4px);
+  pointer-events: none;
+}
+
+/* Ensure tags are visible even when the image is selected */
+img.rmg-selected ~ .rmg-all-tags .rmg-tag {
+  background-color: rgba(0, 0, 0, 0.5);
+}

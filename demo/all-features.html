@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Richman Gallery — all features demo</title>
+  <link rel="stylesheet" href="../src/css/richman-gallery.css">
+  <style>
+    body { font-family: Inter, system-ui, sans-serif; margin: 0; padding: 24px; background: #fafafa; }
+    h1 { font-size: 22px; }
+    h2 { font-size: 17px; margin: 28px 0 4px; }
+    p.hint { color: #555; font-size: 14px; max-width: 720px; }
+    .page { max-width: 1000px; margin: 0 auto; }
+    .toolbar { margin: 8px 0; display: flex; flex-wrap: wrap; gap: 8px; }
+    #feature-log { font-family: monospace; font-size: 12px; white-space: pre-wrap; background: #fff; border: 1px solid #ddd; border-radius: 4px; padding: 8px; min-height: 40px; }
+    #host:empty::after { content: "No gallery yet — click “Create gallery”."; color: #888; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <h1>Richman Gallery — all features in one gallery</h1>
+    <p class="hint">
+      This gallery starts empty. <strong>Create gallery</strong> builds it
+      dynamically (the library auto-initializes it), and
+      <strong>Reinitialize</strong> swaps its images and calls
+      <code>reinitialize()</code>. It has multi-select enabled with a maximum of
+      <strong>3</strong>, plus tags, likes and comments. Every callback
+      (<code>onSelect</code>, <code>onUnselect</code>, <code>onLike</code>,
+      <code>onComments</code>) is logged below.
+    </p>
+
+    <h2>Gallery</h2>
+    <div class="toolbar">
+      <button id="btn-create">Create gallery</button>
+      <button id="btn-reinitialize" disabled>Reinitialize (swap images)</button>
+      <button id="btn-select-all" disabled>selectAll()</button>
+      <button id="btn-unselect-all" disabled>unselectAll()</button>
+    </div>
+    <div id="host"></div>
+
+    <h2>Callback log</h2>
+    <div id="feature-log">—</div>
+  </div>
+
+  <script>
+    const logEl = document.getElementById('feature-log');
+    const lines = [];
+    const log = (msg) => { lines.push(msg); logEl.textContent = lines.join('\n'); };
+
+    window.GRID_GALLERY_HOOKS = {
+      onSelect: (id) => log('onSelect(' + id + ')'),
+      onUnselect: (id) => log('onUnselect(' + id + ')'),
+      onLike: (id, liked) => log('onLike(' + id + ', ' + liked + ')'),
+      onComments: (id) => log('onComments(' + id + ')')
+    };
+
+    const host = document.getElementById('host');
+    const reinitBtn = document.getElementById('btn-reinitialize');
+    const selectAllBtn = document.getElementById('btn-select-all');
+    const unselectAllBtn = document.getElementById('btn-unselect-all');
+
+    // Every attribute the library reads is exercised here:
+    //   title only · title + linkTo (title becomes the link) ·
+    //   title + linkTo + linkText · linkTo only (falls back to "(open)") ·
+    //   no title / no link · tags · pre-liked
+    const firstSet = `
+      <img src="img/photo1.svg" data-id="a1" title="Title only">
+      <img src="img/photo2.svg" data-id="a2" title="Title becomes the link" linkTo="https://example.com/a2">
+      <img src="img/photo3.svg" data-id="a3" title="Titled link with custom text" linkTo="https://example.com/a3" linkText="Visit">
+      <img src="img/photo4.svg" data-id="a4" linkTo="https://example.com/a4">
+      <img src="img/photo5.svg" data-id="a5" tags="no title; no link">
+      <img src="img/photo6.svg" data-id="a6" title="Pre-liked, tagged" tags="liked; tagged" data-liked="true">
+      <img src="img/photo7.svg" data-id="a7" tags="plain">
+      <img src="img/photo8.svg" data-id="a8" title="Another photo" linkTo="https://example.com/a8" linkText="Open">
+    `;
+
+    const secondSet = `
+      <img src="img/photo9.svg" data-id="b1" title="Replacement one" linkTo="https://example.com/b1">
+      <img src="img/photo10.svg" data-id="b2" tags="new set">
+      <img src="img/photo9.svg" data-id="b3">
+      <img src="img/photo10.svg" data-id="b4" title="Replacement four" data-liked="true">
+      <img src="img/photo9.svg" data-id="b5" tags="fresh; batch">
+      <img src="img/photo10.svg" data-id="b6" linkTo="https://example.com/b6" linkText="More">
+    `;
+
+    const buildMarkup = (images) => `
+      <div class="rmg-gallery" id="all-features" data-columns="4"
+           data-multiselect-enabled="true" data-max-selectable="3" data-show-order-numbers
+           data-like-enabled="true" data-comments-enabled="true"
+           data-like-position="bottom-right">
+        <div class="rmg-grid">${images}</div>
+      </div>`;
+
+    document.getElementById('btn-create').addEventListener('click', () => {
+      host.innerHTML = buildMarkup(firstSet);
+      log('— created gallery (auto-initialized) —');
+      reinitBtn.disabled = false;
+      selectAllBtn.disabled = false;
+      unselectAllBtn.disabled = false;
+    });
+
+    reinitBtn.addEventListener('click', () => {
+      const container = document.getElementById('all-features');
+      if (!container) return;
+      container.querySelector('.rmg-grid').innerHTML = secondSet;
+      window.GridGallery.get(container).reinitialize();
+      log('— images swapped + reinitialize() —');
+    });
+
+    selectAllBtn.addEventListener('click', () => {
+      window.GridGallery.get('#all-features').selectAll();
+    });
+
+    unselectAllBtn.addEventListener('click', () => {
+      window.GridGallery.get('#all-features').unselectAll();
+    });
+  </script>
+  <script src="../dist/richman-gallery.min.js"></script>
+</body>
+</html>
