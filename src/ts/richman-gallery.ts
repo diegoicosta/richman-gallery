@@ -29,7 +29,12 @@ declare global {
   }
 }
 
+declare const __RMG_VERSION__: string;
+
+export const VERSION: string = __RMG_VERSION__;
+
 export interface GridGalleryApi {
+  version: string;
   create(containerOrSelector: HTMLElement | string, options?: GridGalleryOptions): GridGalleryInstance | null;
   get(containerOrSelector: HTMLElement | string): GridGalleryInstance | null;
   initAll(options?: GridGalleryOptions): GridGalleryInstance[];
@@ -919,6 +924,7 @@ export class GridGalleryInstance {
 
 // ===== PUBLIC API =====
 export const GridGallery: GridGalleryApi = {
+  version: VERSION,
   create(containerOrSelector: HTMLElement | string, options: GridGalleryOptions = {}): GridGalleryInstance | null {
     let container: HTMLElement | null;
     if (typeof containerOrSelector === 'string') {

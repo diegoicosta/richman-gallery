@@ -121,6 +121,8 @@
 
     <h2>Reaction events</h2>
     <p class="hint" id="reaction-log" style="font-family: monospace;">—</p>
+
+    <p class="hint rmg-version" id="rmg-version" style="margin-top: 24px;"></p>
   </div>
 
   <script>
@@ -194,5 +196,9 @@
     });
   </script>
   <script src="../dist/richman-gallery.min.js"></script>
+  <script>
+    document.getElementById('rmg-version').textContent =
+      'richman-gallery v' + window.GridGallery.version;
+  </script>
 </body>
 </html>

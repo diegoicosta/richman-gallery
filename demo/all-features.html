@@ -40,6 +40,8 @@
 
     <h2>Callback log</h2>
     <div id="feature-log">—</div>
+
+    <p class="hint rmg-version" id="rmg-version" style="margin-top: 24px;"></p>
   </div>
 
   <script>
@@ -116,5 +118,9 @@
     });
   </script>
   <script src="../dist/richman-gallery.min.js"></script>
+  <script>
+    document.getElementById('rmg-version').textContent =
+      'richman-gallery v' + window.GridGallery.version;
+  </script>
 </body>
 </html>
