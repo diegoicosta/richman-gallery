@@ -32,9 +32,9 @@ jobs:
 
       - name: Assemble site
         run: |
-          mkdir -p _site/demo _site/src/css _site/dist
+          mkdir -p _site/demo _site/src _site/dist
           cp -r demo/. _site/demo/
-          cp -r src/css/. _site/src/css/
+          cp src/richman-gallery.css _site/src/
           cp -r dist/. _site/dist/
           cat > _site/index.html <<'HTML'
           <!DOCTYPE html>

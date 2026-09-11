@@ -78,7 +78,7 @@ jobs:
           gh release create "${{ steps.ver.outputs.tag }}" \
             dist/richman-gallery.min.js \
             dist/richman-gallery.esm.js \
-            src/css/richman-gallery.css \
+            src/richman-gallery.css \
             --title "${{ steps.ver.outputs.tag }}" \
             --generate-notes
 

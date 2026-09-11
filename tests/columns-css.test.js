@@ -8,7 +8,7 @@ import { join } from 'node:path';
 // attribute-driven responsive table. jsdom applies no CSS, so we assert the
 // shipped stylesheet directly.
 
-const css = readFileSync(join(process.cwd(), 'src/css/richman-gallery.css'), 'utf8');
+const css = readFileSync(join(process.cwd(), 'src/richman-gallery.css'), 'utf8');
 
 const noWhitespace = (s) => s.replace(/\s+/g, '');
 

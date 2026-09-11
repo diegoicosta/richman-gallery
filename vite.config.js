@@ -10,7 +10,7 @@ export default defineConfig({
   },
   build: {
     lib: {
-      entry: 'src/ts/richman-gallery.ts',
+      entry: 'src/richman-gallery.ts',
       name: 'RichmanGallery',
       formats: ['es', 'iife'],
       fileName: (format) =>

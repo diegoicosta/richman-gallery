@@ -2,10 +2,34 @@
   "name": "richman-gallery",
   "version": "0.1.0",
   "private": true,
-  "description": "Feature-behavior contract tests for Richman Gallery (grid + lightbox batch).",
+  "description": "Responsive photo gallery with fullscreen viewer, multi-select, tags, likes and comments. No dependencies.",
+  "license": "MIT",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/diegoicosta/richman-gallery.git"
+  },
+  "homepage": "https://diegoicosta.github.io/richman-gallery/",
+  "main": "./dist/richman-gallery.esm.js",
+  "module": "./dist/richman-gallery.esm.js",
+  "types": "./dist/richman-gallery.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/richman-gallery.d.ts",
+      "import": "./dist/richman-gallery.esm.js",
+      "default": "./dist/richman-gallery.esm.js"
+    },
+    "./richman-gallery.css": "./src/richman-gallery.css"
+  },
+  "files": [
+    "dist",
+    "src/richman-gallery.css",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
-    "build": "vite build",
+    "build": "vite build && npm run build:types",
+    "build:types": "tsc -p tsconfig.build.json",
     "test": "vitest run",
     "typecheck": "tsc -p tsconfig.json"
   },

@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import '../src/ts/richman-gallery.ts';
+import '../src/richman-gallery.ts';
 
 function makePhoto(prefix, n, extra = {}) {
   return { src: `/${prefix}${n}.jpg`, 'data-id': `${prefix}${n}`, ...extra };

@@ -7,7 +7,7 @@ import { join } from 'node:path';
 // directly that the library CSS defines the rules the feature depends on.
 // A rule living in an app's private stylesheet does NOT count.
 
-const css = readFileSync(join(process.cwd(), 'src/css/richman-gallery.css'), 'utf8');
+const css = readFileSync(join(process.cwd(), 'src/richman-gallery.css'), 'utf8');
 
 const noWhitespace = (s) => s.replace(/\s+/g, '');
 
