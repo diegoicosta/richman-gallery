@@ -1,6 +1,6 @@
 {
   "name": "richman-gallery",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "description": "Responsive photo gallery with fullscreen viewer, multi-select, tags, likes and comments. No dependencies.",
   "license": "MIT",
