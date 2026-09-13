@@ -47,14 +47,14 @@ describe('comments', () => {
     const container = mountGallery([makePhoto('p1'), makePhoto('p2')], {
       'data-comments-enabled': 'true'
     });
-    window.GridGallery.create(container);
+    window.RichmanGallery.create(container);
 
     expect(container.querySelectorAll('.rmg-comment-marker').length).toBe(2);
   });
 
   it('adds no comment markers when comments are not enabled', () => {
     const container = mountGallery([makePhoto('p1')]);
-    window.GridGallery.create(container);
+    window.RichmanGallery.create(container);
 
     expect(container.querySelectorAll('.rmg-comment-marker').length).toBe(0);
   });
@@ -62,7 +62,7 @@ describe('comments', () => {
   it('notifies the page with the image id when the bubble is clicked', () => {
     const opened = [];
     const container = mountGallery([makePhoto('p1')], { 'data-comments-enabled': 'true' });
-    window.GridGallery.create(container, { onComments: (id) => opened.push(id) });
+    window.RichmanGallery.create(container, { onComments: (id) => opened.push(id) });
 
     clickComment(container, 'p1');
 
@@ -72,7 +72,7 @@ describe('comments', () => {
   it('is stateless: it keeps no state and notifies again on each click', () => {
     const opened = [];
     const container = mountGallery([makePhoto('p1')], { 'data-comments-enabled': 'true' });
-    window.GridGallery.create(container, { onComments: (id) => opened.push(id) });
+    window.RichmanGallery.create(container, { onComments: (id) => opened.push(id) });
 
     const img = container.querySelector('img[data-id="p1"]');
     const marker = commentMarkerFor(container, 'p1');
@@ -92,7 +92,7 @@ describe('comments', () => {
     const opened = [];
     const noId = { src: '/orphan.jpg' };
     const container = mountGallery([noId], { 'data-comments-enabled': 'true' });
-    window.GridGallery.create(container, { onComments: (id) => opened.push(id) });
+    window.RichmanGallery.create(container, { onComments: (id) => opened.push(id) });
 
     const orphan = container.querySelector('img[src="/orphan.jpg"]');
     orphan.parentElement.querySelector('.rmg-comment-marker')
@@ -104,7 +104,7 @@ describe('comments', () => {
   it('enables comments and wiring from options alone', () => {
     const opened = [];
     const container = mountGallery([makePhoto('p1')]);
-    window.GridGallery.create(container, { comments: true, onComments: (id) => opened.push(id) });
+    window.RichmanGallery.create(container, { comments: true, onComments: (id) => opened.push(id) });
 
     expect(container.hasAttribute('data-comments-enabled')).toBe(true);
     clickComment(container, 'p1');

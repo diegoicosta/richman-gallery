@@ -37,7 +37,7 @@ afterEach(() => {
 describe('basic grid', () => {
   it('keeps the provided images in the DOM, in order', () => {
     const container = mountGallery([PHOTO, PHOTO2, PHOTO3]);
-    window.GridGallery.create(container);
+    window.RichmanGallery.create(container);
 
     const imgs = container.querySelectorAll('.rmg-grid img');
     expect(imgs.length).toBe(3);
@@ -47,7 +47,7 @@ describe('basic grid', () => {
 
   it('stores a gallery instance on the container', () => {
     const container = mountGallery([PHOTO]);
-    const gallery = window.GridGallery.create(container);
+    const gallery = window.RichmanGallery.create(container);
 
     expect(gallery).toBeTruthy();
     expect(container._gallery).toBe(gallery);
@@ -55,8 +55,8 @@ describe('basic grid', () => {
 
   it('returns the same instance if the container is already a gallery', () => {
     const container = mountGallery([PHOTO]);
-    const first = window.GridGallery.create(container);
-    const second = window.GridGallery.create(container);
+    const first = window.RichmanGallery.create(container);
+    const second = window.RichmanGallery.create(container);
 
     expect(second).toBe(first);
   });
@@ -65,7 +65,7 @@ describe('basic grid', () => {
 describe('lightbox', () => {
   it('opens a fullscreen viewer when an image is clicked', () => {
     const container = mountGallery([PHOTO, PHOTO2]);
-    window.GridGallery.create(container);
+    window.RichmanGallery.create(container);
 
     const img = container.querySelector('img');
     img.dispatchEvent(new MouseEvent('click', { bubbles: true }));
@@ -78,7 +78,7 @@ describe('lightbox', () => {
 
   it('hides prev/next when the gallery has a single image', () => {
     const container = mountGallery([PHOTO]);
-    window.GridGallery.create(container);
+    window.RichmanGallery.create(container);
 
     container.querySelector('img').dispatchEvent(new MouseEvent('click', { bubbles: true }));
 
@@ -89,7 +89,7 @@ describe('lightbox', () => {
 
   it('shows prev/next and hides prev on the first image of a multi-image gallery', () => {
     const container = mountGallery([PHOTO, PHOTO2, PHOTO3]);
-    window.GridGallery.create(container);
+    window.RichmanGallery.create(container);
 
     container.querySelector('img').dispatchEvent(new MouseEvent('click', { bubbles: true }));
 
@@ -100,7 +100,7 @@ describe('lightbox', () => {
 
   it('navigates to the next image and hides next on the last image', () => {
     const container = mountGallery([PHOTO, PHOTO2]);
-    window.GridGallery.create(container);
+    window.RichmanGallery.create(container);
 
     const img = container.querySelector('img');
     img.dispatchEvent(new MouseEvent('click', { bubbles: true }));
@@ -115,7 +115,7 @@ describe('lightbox', () => {
 
   it('navigates with the arrow keys and closes with Escape', () => {
     const container = mountGallery([PHOTO, PHOTO2]);
-    window.GridGallery.create(container);
+    window.RichmanGallery.create(container);
 
     container.querySelector('img').dispatchEvent(new MouseEvent('click', { bubbles: true }));
 
@@ -134,7 +134,7 @@ describe('lightbox', () => {
 
   it('closes a single-image gallery with Escape too', () => {
     const container = mountGallery([PHOTO]);
-    window.GridGallery.create(container);
+    window.RichmanGallery.create(container);
 
     container.querySelector('img').dispatchEvent(new MouseEvent('click', { bubbles: true }));
     expect(container.querySelector('#rmg-screen')).toBeTruthy();
@@ -147,7 +147,7 @@ describe('lightbox', () => {
 
   it('ignores the arrow keys in a single-image gallery', () => {
     const container = mountGallery([PHOTO]);
-    window.GridGallery.create(container);
+    window.RichmanGallery.create(container);
 
     container.querySelector('img').dispatchEvent(new MouseEvent('click', { bubbles: true }));
 
@@ -160,7 +160,7 @@ describe('lightbox', () => {
 
   it('closes when the close button is clicked', () => {
     const container = mountGallery([PHOTO]);
-    window.GridGallery.create(container);
+    window.RichmanGallery.create(container);
 
     container.querySelector('img').dispatchEvent(new MouseEvent('click', { bubbles: true }));
 
@@ -173,7 +173,7 @@ describe('lightbox', () => {
 
   it('closes when the backdrop is clicked', () => {
     const container = mountGallery([PHOTO, PHOTO2]);
-    window.GridGallery.create(container);
+    window.RichmanGallery.create(container);
 
     container.querySelector('img').dispatchEvent(new MouseEvent('click', { bubbles: true }));
 
@@ -185,7 +185,7 @@ describe('lightbox', () => {
 
   it('shows the image title under the viewer when the image has a title', () => {
     const container = mountGallery([{ src: '/photo.jpg', 'data-id': 'p1', title: 'Sunset by Ana' }]);
-    window.GridGallery.create(container);
+    window.RichmanGallery.create(container);
 
     container.querySelector('img').dispatchEvent(new MouseEvent('click', { bubbles: true }));
 
@@ -197,7 +197,7 @@ describe('lightbox', () => {
 
   it('hides the title area when the image has no title', () => {
     const container = mountGallery([{ src: '/photo.jpg', 'data-id': 'p1' }]);
-    window.GridGallery.create(container);
+    window.RichmanGallery.create(container);
 
     container.querySelector('img').dispatchEvent(new MouseEvent('click', { bubbles: true }));
 
@@ -208,7 +208,7 @@ describe('lightbox', () => {
   describe('photo link', () => {
     const open = (attrs) => {
       const container = mountGallery([{ src: '/photo.jpg', 'data-id': 'p1', ...attrs }]);
-      window.GridGallery.create(container);
+      window.RichmanGallery.create(container);
       container.querySelector('img').dispatchEvent(new MouseEvent('click', { bubbles: true }));
       return container.querySelector('#rmg-screen .rmg-title-container');
     };

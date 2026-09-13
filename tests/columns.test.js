@@ -35,28 +35,28 @@ const photo = (id) => ({ src: `/photo-${id}.jpg`, 'data-id': id });
 describe('columns configuration', () => {
   it('sets the data-columns attribute from the columns option', () => {
     const container = mountGallery([photo('p1')]);
-    window.GridGallery.create(container, { columns: 4 });
+    window.RichmanGallery.create(container, { columns: 4 });
 
     expect(container.getAttribute('data-columns')).toBe('4');
   });
 
   it('preserves a data-columns attribute present on the markup', () => {
     const container = mountGallery([photo('p1')], { 'data-columns': '2' });
-    window.GridGallery.create(container);
+    window.RichmanGallery.create(container);
 
     expect(container.getAttribute('data-columns')).toBe('2');
   });
 
   it('reads data-columns during initAll', () => {
     mountGallery([photo('p1')], { 'data-columns': '3' });
-    const [gallery] = window.GridGallery.initAll();
+    const [gallery] = window.RichmanGallery.initAll();
 
     expect(gallery.container.getAttribute('data-columns')).toBe('3');
   });
 
   it('leaves the container without data-columns when not configured', () => {
     const container = mountGallery([photo('p1')]);
-    window.GridGallery.create(container);
+    window.RichmanGallery.create(container);
 
     expect(container.hasAttribute('data-columns')).toBe(false);
   });

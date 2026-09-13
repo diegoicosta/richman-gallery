@@ -92,7 +92,7 @@ describe('galleries added after load', () => {
 
     await flushObserver();
 
-    const galleries = window.GridGallery.initAll();
+    const galleries = window.RichmanGallery.initAll();
     expect(galleries.length).toBe(1);
     expect(container._gallery).toBe(galleries[0]);
   });
@@ -108,7 +108,7 @@ describe('reinitialization after the grid images are replaced', () => {
     container.appendChild(box);
     document.body.appendChild(container);
 
-    const gallery = window.GridGallery.create(container);
+    const gallery = window.RichmanGallery.create(container);
     expect(gallery.images.length).toBe(1);
 
     box.innerHTML = '';
@@ -129,7 +129,7 @@ describe('reinitialization after the grid images are replaced', () => {
     container.appendChild(box);
     document.body.appendChild(container);
 
-    const gallery = window.GridGallery.create(container);
+    const gallery = window.RichmanGallery.create(container);
 
     box.innerHTML = '';
     const newImg = imageEl(makePhoto('p2'));
@@ -150,7 +150,7 @@ describe('reinitialization after the grid images are replaced', () => {
     container.appendChild(box);
     document.body.appendChild(container);
 
-    const gallery = window.GridGallery.create(container);
+    const gallery = window.RichmanGallery.create(container);
 
     box.innerHTML = '';
     box.appendChild(imageEl(makePhoto('p2', { 'tags': '50mm; Paris' })));
@@ -171,7 +171,7 @@ describe('reinitialization after the grid images are replaced', () => {
     container.appendChild(box);
     document.body.appendChild(container);
 
-    const gallery = window.GridGallery.create(container);
+    const gallery = window.RichmanGallery.create(container);
 
     box.innerHTML = '';
     box.appendChild(imageEl(makePhoto('p2', { 'data-liked': true })));
@@ -193,7 +193,7 @@ describe('reinitialization after the grid images are replaced', () => {
     container.appendChild(box);
     document.body.appendChild(container);
 
-    const gallery = window.GridGallery.create(container);
+    const gallery = window.RichmanGallery.create(container);
 
     const marker1 = box.querySelector('img[data-id="p1"]').parentElement.querySelector('.rmg-circle-marker');
     const marker2 = box.querySelector('img[data-id="p2"]').parentElement.querySelector('.rmg-circle-marker');
@@ -219,7 +219,7 @@ describe('reinitialization after the grid images are replaced', () => {
     container.appendChild(box);
     document.body.appendChild(container);
 
-    const gallery = window.GridGallery.create(container);
+    const gallery = window.RichmanGallery.create(container);
 
     box.querySelector('.rmg-circle-marker').dispatchEvent(new MouseEvent('click', { bubbles: true }));
     const bar = container.querySelector('.rmg-multiselect-bar');

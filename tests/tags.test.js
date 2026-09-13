@@ -49,7 +49,7 @@ describe('tags', () => {
     const container = mountGallery([
       makePhoto('p1', { 'tags': '50mm; f/1.8; Paris' })
     ]);
-    window.GridGallery.create(container);
+    window.RichmanGallery.create(container);
 
     expect(tagTexts(container, 'p1')).toEqual(['50mm', 'f/1.8', 'Paris']);
   });
@@ -58,21 +58,21 @@ describe('tags', () => {
     const container = mountGallery([
       makePhoto('p1', { 'tags': '  50mm ; ;  f/1.8 ;' })
     ]);
-    window.GridGallery.create(container);
+    window.RichmanGallery.create(container);
 
     expect(tagTexts(container, 'p1')).toEqual(['50mm', 'f/1.8']);
   });
 
   it('adds no tags to an image without a tags attribute', () => {
     const container = mountGallery([makePhoto('p1')]);
-    window.GridGallery.create(container);
+    window.RichmanGallery.create(container);
 
     expect(tagsContainerOf(container, 'p1')).toBeFalsy();
   });
 
   it('does not wrap images that have no tags', () => {
     const container = mountGallery([makePhoto('p1')]);
-    window.GridGallery.create(container);
+    window.RichmanGallery.create(container);
 
     const img = container.querySelector('img[data-id="p1"]');
     expect(img.parentElement.classList.contains('rmg-image-wrapper')).toBe(false);
@@ -83,7 +83,7 @@ describe('tags', () => {
       makePhoto('p1', { 'tags': '50mm' }),
       makePhoto('p2', { 'tags': '85mm' })
     ]);
-    window.GridGallery.create(container);
+    window.RichmanGallery.create(container);
 
     const wrappers = container.querySelectorAll('.rmg-image-wrapper');
     expect(wrappers.length).toBe(2);
@@ -94,7 +94,7 @@ describe('tags', () => {
       [makePhoto('p1', { 'tags': '50mm' })],
       { 'data-multiselect-enabled': 'true' }
     );
-    window.GridGallery.create(container);
+    window.RichmanGallery.create(container);
 
     const wrapper = container.querySelector('.rmg-image-wrapper');
     expect(wrapper.querySelector('.rmg-all-tags')).toBeTruthy();
@@ -103,7 +103,7 @@ describe('tags', () => {
 
   it('adds tags to images inserted into the gallery after load', async () => {
     const container = mountGallery([makePhoto('p1')]);
-    window.GridGallery.create(container);
+    window.RichmanGallery.create(container);
 
     const img = document.createElement('img');
     img.src = '/photo-late.jpg';
@@ -118,7 +118,7 @@ describe('tags', () => {
 
   it('does not duplicate tags when the gallery is reinitialized', () => {
     const container = mountGallery([makePhoto('p1', { 'tags': '50mm' })]);
-    const gallery = window.GridGallery.create(container);
+    const gallery = window.RichmanGallery.create(container);
 
     gallery.reinitialize();
     gallery.reinitialize();

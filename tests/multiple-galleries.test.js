@@ -61,7 +61,7 @@ describe('multiple galleries on one page', () => {
   it('gives each container its own independent instance', () => {
     const [first, second] = mountTwoGalleries();
 
-    window.GridGallery.initAll();
+    window.RichmanGallery.initAll();
 
     expect(first._gallery).toBeTruthy();
     expect(second._gallery).toBeTruthy();
@@ -70,7 +70,7 @@ describe('multiple galleries on one page', () => {
 
   it('keeps each gallery selection independent', () => {
     const [first, second] = mountTwoGalleries();
-    window.GridGallery.initAll();
+    window.RichmanGallery.initAll();
 
     clickMarker(first, 'a1');
     clickMarker(first, 'a2');
@@ -82,7 +82,7 @@ describe('multiple galleries on one page', () => {
 
   it('lets clearing one gallery leave the other selection intact', () => {
     const [first, second] = mountTwoGalleries();
-    window.GridGallery.initAll();
+    window.RichmanGallery.initAll();
 
     clickMarker(first, 'a1');
     clickMarker(second, 'b1');
@@ -95,7 +95,7 @@ describe('multiple galleries on one page', () => {
 
   it('selectAll on one gallery leaves the other untouched', () => {
     const [first, second] = mountTwoGalleries();
-    window.GridGallery.initAll();
+    window.RichmanGallery.initAll();
 
     first._gallery.selectAll();
 
@@ -105,7 +105,7 @@ describe('multiple galleries on one page', () => {
 
   it('opens the lightbox inside the gallery that was clicked', () => {
     const [first, second] = mountTwoGalleries();
-    window.GridGallery.initAll();
+    window.RichmanGallery.initAll();
 
     second.querySelector('img[data-id="b1"]')
       .dispatchEvent(new MouseEvent('click', { bubbles: true }));
@@ -117,7 +117,7 @@ describe('multiple galleries on one page', () => {
 
   it('navigates only the clicked gallery images in the lightbox', () => {
     const [first, second] = mountTwoGalleries();
-    window.GridGallery.initAll();
+    window.RichmanGallery.initAll();
 
     second.querySelector('img[data-id="b1"]')
       .dispatchEvent(new MouseEvent('click', { bubbles: true }));
@@ -134,7 +134,7 @@ describe('multiple galleries on one page', () => {
 
   it('toggling multi-select on one gallery does not affect the other', () => {
     const [first, second] = mountTwoGalleries();
-    window.GridGallery.initAll();
+    window.RichmanGallery.initAll();
 
     first._gallery.toggleSelectionMode();
 

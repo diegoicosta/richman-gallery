@@ -136,7 +136,7 @@
 
     const simulateFailure = document.getElementById('simulate-failure');
 
-    window.GRID_GALLERY_HOOKS = {
+    window.RICHMAN_GALLERY_HOOKS = {
       onSelect: (id) => { log.push('select ' + id); render(); },
       onUnselect: (id) => { log.push('unselect ' + id); render(); },
       onLike: (id, liked) => {
@@ -145,7 +145,7 @@
         if (simulateFailure.checked && inReactions) {
           // The like already changed optimistically; the page can restore the
           // previous state when persistence fails.
-          window.GridGallery.get('#reactions-gallery').setLiked(id, !liked);
+          window.RichmanGallery.get('#reactions-gallery').setLiked(id, !liked);
           reactionLog.push('rollback ' + id + '=' + !liked);
         }
         renderReactions();
@@ -156,7 +156,7 @@
       }
     };
 
-    const compactGallery = () => window.GridGallery.get('#compact-gallery');
+    const compactGallery = () => window.RichmanGallery.get('#compact-gallery');
     document.getElementById('btn-select-all').addEventListener('click', () => compactGallery().selectAll());
     document.getElementById('btn-unselect-all').addEventListener('click', () => compactGallery().unselectAll());
     document.getElementById('btn-toggle-mode').addEventListener('click', () => compactGallery().toggleSelectionMode());
@@ -191,14 +191,14 @@
       const container = document.getElementById('dynamic-gallery');
       if (!container) return;
       container.querySelector('.rmg-grid').innerHTML = secondSet;
-      window.GridGallery.get(container).reinitialize();
+      window.RichmanGallery.get(container).reinitialize();
       setDynStatus('images replaced, reinitialize() called — new images are live');
     });
   </script>
   <script src="../dist/richman-gallery.min.js"></script>
   <script>
     document.getElementById('rmg-version').textContent =
-      'richman-gallery v' + window.GridGallery.version;
+      'richman-gallery v' + window.RichmanGallery.version;
   </script>
 </body>
 </html>

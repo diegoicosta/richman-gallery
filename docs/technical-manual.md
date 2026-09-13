@@ -28,7 +28,7 @@ The spacing between grid images is the CSS variable **`--gap-length`** (default 
 ```
 
 ```js
-window.GridGallery.create(container, { gaplength: 10 });
+window.RichmanGallery.create(container, { gaplength: 10 });
 ```
 
 ### `.rmg-grid`
@@ -121,7 +121,7 @@ Each individual tag is rendered with the **`.rmg-tag`** class. This is the class
 
 ## Selection — API, callbacks and limits
 
-Multi-select is enabled per gallery with `data-multiselect-enabled` (or the `multiSelect: true` option). All of the selection API below is **per gallery** — there is no global, all-galleries helper. Get a gallery instance with `GridGallery.create(container)` or `GridGallery.get(container)`.
+Multi-select is enabled per gallery with `data-multiselect-enabled` (or the `multiSelect: true` option). All of the selection API below is **per gallery** — there is no global, all-galleries helper. Get a gallery instance with `RichmanGallery.create(container)` or `RichmanGallery.get(container)`.
 
 ### Methods
 
@@ -133,7 +133,7 @@ Multi-select is enabled per gallery with `data-multiselect-enabled` (or the `mul
 | `toggleSelectionMode()` | Turns multi-select on or off. Turning it **off** also clears the selection. |
 
 ```js
-const gallery = window.GridGallery.get('#my-gallery');
+const gallery = window.RichmanGallery.get('#my-gallery');
 gallery.selectAll();
 gallery.getSelectedIds();   // ['p7', 'p8', 'p9', 'p10']
 gallery.unselectAll();
@@ -160,13 +160,13 @@ A callback fires only for a real change: an image already selected (and still se
 
 ```js
 // per init options
-window.GridGallery.create(container, {
+window.RichmanGallery.create(container, {
   onSelect: (id) => console.log('selected', id),
   onUnselect: (id) => console.log('unselected', id)
 });
 
 // or, for auto-initialised galleries, via the global hooks
-window.GRID_GALLERY_HOOKS = {
+window.RICHMAN_GALLERY_HOOKS = {
   onSelect: (id) => console.log('selected', id),
   onUnselect: (id) => console.log('unselected', id)
 };
@@ -237,12 +237,12 @@ Clicking a heart flips the image between liked and not-liked. The library **hold
 - `setLiked(photoId, liked)` — forces an image to a given liked state. This is the **rollback** hook: because the marker already changed optimistically when `onLike` fired, the page calls `setLiked(photoId, !liked)` to restore the previous state if persistence failed.
 
 ```js
-window.GridGallery.create(container, {
+window.RichmanGallery.create(container, {
   like: true,
   onLike: (photoId, liked) => {
     save(photoId, liked).catch(() => {
       // persistence failed — put the marker back the way it was
-      window.GridGallery.get(container).setLiked(photoId, !liked);
+      window.RichmanGallery.get(container).setLiked(photoId, !liked);
     });
   }
 });
@@ -264,10 +264,10 @@ Both callbacks can be given either per gallery (init options) or globally (for a
 
 ```js
 // per init
-window.GridGallery.create(container, { onLike, onComments });
+window.RichmanGallery.create(container, { onLike, onComments });
 
 // global, used when a gallery is initialised without its own callbacks
-window.GRID_GALLERY_HOOKS = { onLike, onComments };
+window.RICHMAN_GALLERY_HOOKS = { onLike, onComments };
 ```
 
 When both are provided, the per-gallery option wins. The same applies to selection callbacks (`onSelect` / `onUnselect`).
@@ -316,7 +316,7 @@ The inserted element's **configuration attributes are read at that moment** — 
 Auto-init only fires when a `.rmg-gallery` element itself is added. Appending or replacing `<img>` elements *inside an existing* grid does **not** re-run it, so those new images do not get their click-to-open handler, liked state, or markers — call **`reinitialize()`** on the gallery to restore all of them:
 
 ```js
-const gallery = window.GridGallery.get('#my-gallery');
+const gallery = window.RichmanGallery.get('#my-gallery');
 container.querySelector('.rmg-grid').innerHTML = newImagesHtml;
 gallery.reinitialize();
 ```
@@ -325,21 +325,21 @@ gallery.reinitialize();
 
 > **Note:** tags are a partial exception. A gallery observes its own grid, so `<img>` elements appended to an existing `.rmg-grid` get their tags rendered automatically even without `reinitialize()`. But their click-to-open handler, liked state, and markers are only applied by `reinitialize()` — so for a full, consistent swap, always call it.
 
-There is no global reinitialize helper — like the selection API, it is a per-gallery method. Get the instance with `GridGallery.get(container)` (or keep the one returned by `GridGallery.create`).
+There is no global reinitialize helper — like the selection API, it is a per-gallery method. Get the instance with `RichmanGallery.get(container)` (or keep the one returned by `RichmanGallery.create`).
 
 ## Public API
 
-The library exposes a single global, `window.GridGallery`.
+The library exposes a single global, `window.RichmanGallery`.
 
 | Method | Description |
 | --- | --- |
-| `GridGallery.create(containerOrSelector, options?)` | Builds a gallery for one container (element or selector) and returns the instance. If the container already has a gallery, returns the existing instance. Returns `null` for a selector that matches nothing. |
-| `GridGallery.get(containerOrSelector)` | Returns the existing gallery instance for a container, or `null`. Use it to call per-gallery methods (`selectAll()`, `reinitialize()`, `closeFullscreen()`, …). |
-| `GridGallery.initAll(options?)` | Scans the document for every `.rmg-gallery` and initializes those that are not yet initialized, returning an array of instances. This is what the library runs automatically on load; call it yourself after adding markup if you do not want to rely on the automatic observer (existing galleries are reused, not duplicated). |
+| `RichmanGallery.create(containerOrSelector, options?)` | Builds a gallery for one container (element or selector) and returns the instance. If the container already has a gallery, returns the existing instance. Returns `null` for a selector that matches nothing. |
+| `RichmanGallery.get(containerOrSelector)` | Returns the existing gallery instance for a container, or `null`. Use it to call per-gallery methods (`selectAll()`, `reinitialize()`, `closeFullscreen()`, …). |
+| `RichmanGallery.initAll(options?)` | Scans the document for every `.rmg-gallery` and initializes those that are not yet initialized, returning an array of instances. This is what the library runs automatically on load; call it yourself after adding markup if you do not want to rely on the automatic observer (existing galleries are reused, not duplicated). |
 
 ```js
-const galleries = window.GridGallery.initAll();
-const one = window.GridGallery.get('#compact-gallery');
+const galleries = window.RichmanGallery.initAll();
+const one = window.RichmanGallery.get('#compact-gallery');
 ```
 
 ### The fullscreen viewer — `closeFullscreen()`

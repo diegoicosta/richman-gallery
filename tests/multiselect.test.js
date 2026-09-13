@@ -51,21 +51,21 @@ afterEach(() => {
 describe('multi-select: markers', () => {
   it('adds a circle marker to every image when multi-select is enabled', () => {
     const container = mountGallery([P1, P2], { 'data-multiselect-enabled': 'true' });
-    window.GridGallery.create(container);
+    window.RichmanGallery.create(container);
 
     expect(container.querySelectorAll('.rmg-circle-marker').length).toBe(2);
   });
 
   it('adds no circle markers when multi-select is not enabled', () => {
     const container = mountGallery([P1, P2]);
-    window.GridGallery.create(container);
+    window.RichmanGallery.create(container);
 
     expect(container.querySelectorAll('.rmg-circle-marker').length).toBe(0);
   });
 
   it('selects an image when its marker is clicked and marks it selected', () => {
     const container = mountGallery([P1, P2], { 'data-multiselect-enabled': 'true' });
-    window.GridGallery.create(container);
+    window.RichmanGallery.create(container);
 
     clickMarker(container, 'p1');
 
@@ -78,7 +78,7 @@ describe('multi-select: markers', () => {
 
   it('deselects an image when its marker is clicked again', () => {
     const container = mountGallery([P1, P2], { 'data-multiselect-enabled': 'true' });
-    window.GridGallery.create(container);
+    window.RichmanGallery.create(container);
 
     clickMarker(container, 'p1');
     clickMarker(container, 'p1');
@@ -90,7 +90,7 @@ describe('multi-select: markers', () => {
   it('does not select an image lacking data-id', () => {
     const noId = { src: '/orphan.jpg' };
     const container = mountGallery([noId, P2], { 'data-multiselect-enabled': 'true' });
-    window.GridGallery.create(container);
+    window.RichmanGallery.create(container);
 
     const orphan = container.querySelector('img[src="/orphan.jpg"]');
     orphan.parentElement.querySelector('.rmg-circle-marker')
@@ -104,14 +104,14 @@ describe('multi-select: markers', () => {
 describe('multi-select: selection bar', () => {
   it('creates the selection bar only when multi-select is enabled', () => {
     const container = mountGallery([P1, P2], { 'data-multiselect-enabled': 'true' });
-    window.GridGallery.create(container);
+    window.RichmanGallery.create(container);
 
     expect(multiSelectBar()).toBeTruthy();
   });
 
   it('shows the selected count with correct pluralization', () => {
     const container = mountGallery([P1, P2], { 'data-multiselect-enabled': 'true' });
-    window.GridGallery.create(container);
+    window.RichmanGallery.create(container);
 
     clickMarker(container, 'p1');
     let count = multiSelectBar().querySelector('.rmg-selection-count');
@@ -124,7 +124,7 @@ describe('multi-select: selection bar', () => {
 
   it('exposes the selected ids in selection order', () => {
     const container = mountGallery([P1, P2], { 'data-multiselect-enabled': 'true' });
-    window.GridGallery.create(container);
+    window.RichmanGallery.create(container);
 
     clickMarker(container, 'p2');
     clickMarker(container, 'p1');
@@ -134,7 +134,7 @@ describe('multi-select: selection bar', () => {
 
   it('clears the selection when the Clear button is clicked', () => {
     const container = mountGallery([P1, P2], { 'data-multiselect-enabled': 'true' });
-    window.GridGallery.create(container);
+    window.RichmanGallery.create(container);
 
     clickMarker(container, 'p1');
     clickMarker(container, 'p2');
@@ -153,7 +153,7 @@ describe('multi-select: max selectable', () => {
       'data-multiselect-enabled': 'true',
       'data-max-selectable': '2'
     });
-    window.GridGallery.create(container);
+    window.RichmanGallery.create(container);
 
     clickMarker(container, 'p1');
     clickMarker(container, 'p2');
@@ -171,7 +171,7 @@ describe('multi-select: max selectable', () => {
 
   it('reports the cap only once it is configured', () => {
     const container = mountGallery([P1, P2], { 'data-multiselect-enabled': 'true' });
-    window.GridGallery.create(container);
+    window.RichmanGallery.create(container);
 
     clickMarker(container, 'p1');
     const count = multiSelectBar().querySelector('.rmg-selection-count');
@@ -184,7 +184,7 @@ describe('multi-select: max selectable', () => {
       'data-multiselect-enabled': 'true',
       'data-max-selectable': '2'
     });
-    const gallery = window.GridGallery.create(container);
+    const gallery = window.RichmanGallery.create(container);
 
     clickMarker(container, 'p3');
     expect(gallery.getSelectedIds()).toEqual(['p3']);
@@ -203,7 +203,7 @@ describe('multi-select: order numbers', () => {
       'data-multiselect-enabled': 'true',
       'data-show-order-numbers': null
     });
-    window.GridGallery.create(container);
+    window.RichmanGallery.create(container);
 
     clickMarker(container, 'p1');
     clickMarker(container, 'p2');
@@ -217,7 +217,7 @@ describe('multi-select: order numbers', () => {
       'data-multiselect-enabled': 'true',
       'data-show-order-numbers': null
     });
-    window.GridGallery.create(container);
+    window.RichmanGallery.create(container);
 
     clickMarker(container, 'p1');
     clickMarker(container, 'p2');
@@ -233,7 +233,7 @@ describe('multi-select: order numbers', () => {
 describe('multi-select: interplay with the lightbox', () => {
   it('still opens the lightbox when the image body is clicked (not the marker)', () => {
     const container = mountGallery([P1, P2], { 'data-multiselect-enabled': 'true' });
-    window.GridGallery.create(container);
+    window.RichmanGallery.create(container);
 
     const img = container.querySelector('img[data-id="p1"]');
     img.dispatchEvent(new MouseEvent('click', { bubbles: true }));
@@ -243,7 +243,7 @@ describe('multi-select: interplay with the lightbox', () => {
 
   it('does not open the lightbox when the marker itself is clicked', () => {
     const container = mountGallery([P1, P2], { 'data-multiselect-enabled': 'true' });
-    window.GridGallery.create(container);
+    window.RichmanGallery.create(container);
 
     clickMarker(container, 'p1');
 
@@ -254,7 +254,7 @@ describe('multi-select: interplay with the lightbox', () => {
 describe('multi-select: selection bar placement', () => {
   it('renders the bar inside the gallery container, not the page body', () => {
     const container = mountGallery([P1, P2], { 'data-multiselect-enabled': 'true' });
-    window.GridGallery.create(container);
+    window.RichmanGallery.create(container);
 
     const bar = multiSelectBar();
     expect(bar).toBeTruthy();
@@ -263,7 +263,7 @@ describe('multi-select: selection bar placement', () => {
 
   it('positions the bar absolutely at the gallery bottom', () => {
     const container = mountGallery([P1, P2], { 'data-multiselect-enabled': 'true' });
-    window.GridGallery.create(container);
+    window.RichmanGallery.create(container);
 
     const style = multiSelectBar().style;
     expect(style.position).toBe('absolute');
@@ -274,7 +274,7 @@ describe('multi-select: selection bar placement', () => {
 
   it('does not intercept clicks while no image is selected', () => {
     const container = mountGallery([P1, P2], { 'data-multiselect-enabled': 'true' });
-    window.GridGallery.create(container);
+    window.RichmanGallery.create(container);
 
     const bar = multiSelectBar();
     expect(bar.style.opacity).toBe('0');
@@ -283,7 +283,7 @@ describe('multi-select: selection bar placement', () => {
 
   it('becomes interactive once an image is selected', () => {
     const container = mountGallery([P1, P2], { 'data-multiselect-enabled': 'true' });
-    window.GridGallery.create(container);
+    window.RichmanGallery.create(container);
 
     clickMarker(container, 'p1');
 
@@ -306,7 +306,7 @@ describe('multi-select: onSelect / onUnselect callbacks', () => {
   it('fires onSelect when a marker selects an image', () => {
     const { events, onSelect, onUnselect } = collect();
     const container = mountGallery([P1, P2], { 'data-multiselect-enabled': 'true' });
-    window.GridGallery.create(container, { onSelect, onUnselect });
+    window.RichmanGallery.create(container, { onSelect, onUnselect });
 
     clickMarker(container, 'p2');
 
@@ -316,7 +316,7 @@ describe('multi-select: onSelect / onUnselect callbacks', () => {
   it('fires onUnselect when a marker deselects an image', () => {
     const { events, onSelect, onUnselect } = collect();
     const container = mountGallery([P1, P2], { 'data-multiselect-enabled': 'true' });
-    window.GridGallery.create(container, { onSelect, onUnselect });
+    window.RichmanGallery.create(container, { onSelect, onUnselect });
 
     clickMarker(container, 'p2');
     clickMarker(container, 'p2');
@@ -327,7 +327,7 @@ describe('multi-select: onSelect / onUnselect callbacks', () => {
   it('does not fire onUnselect for an image that was never selected', () => {
     const { events, onSelect, onUnselect } = collect();
     const container = mountGallery([P1], { 'data-multiselect-enabled': 'true' });
-    window.GridGallery.create(container, { onSelect, onUnselect });
+    window.RichmanGallery.create(container, { onSelect, onUnselect });
 
     container._gallery.unselectAll();
 
@@ -337,7 +337,7 @@ describe('multi-select: onSelect / onUnselect callbacks', () => {
   it('fires onUnselect per image when the selection is cleared', () => {
     const { events, onSelect, onUnselect } = collect();
     const container = mountGallery([P1, P2], { 'data-multiselect-enabled': 'true' });
-    window.GridGallery.create(container, { onSelect, onUnselect });
+    window.RichmanGallery.create(container, { onSelect, onUnselect });
 
     clickMarker(container, 'p1');
     clickMarker(container, 'p2');
@@ -352,7 +352,7 @@ describe('multi-select: onSelect / onUnselect callbacks', () => {
   it('fires onSelect per image when selectAll is used', () => {
     const { events, onSelect, onUnselect } = collect();
     const container = mountGallery([P1, P2, P3], { 'data-multiselect-enabled': 'true' });
-    const gallery = window.GridGallery.create(container, { onSelect, onUnselect });
+    const gallery = window.RichmanGallery.create(container, { onSelect, onUnselect });
 
     gallery.selectAll();
 
@@ -366,7 +366,7 @@ describe('multi-select: onSelect / onUnselect callbacks', () => {
   it('fires onUnselect per image when multi-select mode is turned off', () => {
     const { events, onSelect, onUnselect } = collect();
     const container = mountGallery([P1, P2], { 'data-multiselect-enabled': 'true' });
-    const gallery = window.GridGallery.create(container, { onSelect, onUnselect });
+    const gallery = window.RichmanGallery.create(container, { onSelect, onUnselect });
 
     clickMarker(container, 'p1');
     clickMarker(container, 'p2');

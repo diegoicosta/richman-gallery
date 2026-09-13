@@ -56,21 +56,21 @@ describe('likes', () => {
     const container = mountGallery([makePhoto('p1'), makePhoto('p2')], {
       'data-like-enabled': 'true'
     });
-    window.GridGallery.create(container);
+    window.RichmanGallery.create(container);
 
     expect(container.querySelectorAll('.rmg-like-marker').length).toBe(2);
   });
 
   it('adds no heart markers when likes are not enabled', () => {
     const container = mountGallery([makePhoto('p1')]);
-    window.GridGallery.create(container);
+    window.RichmanGallery.create(container);
 
     expect(container.querySelectorAll('.rmg-like-marker').length).toBe(0);
   });
 
   it('shows an outlined heart on an image that is not liked', () => {
     const container = mountGallery([makePhoto('p1')], { 'data-like-enabled': 'true' });
-    window.GridGallery.create(container);
+    window.RichmanGallery.create(container);
 
     const marker = likeMarkerFor(container, 'p1');
     expect(marker.classList.contains('liked')).toBe(false);
@@ -79,7 +79,7 @@ describe('likes', () => {
 
   it('likes an image on marker click and turns the heart solid', () => {
     const container = mountGallery([makePhoto('p1')], { 'data-like-enabled': 'true' });
-    window.GridGallery.create(container);
+    window.RichmanGallery.create(container);
 
     clickLike(container, 'p1');
 
@@ -92,7 +92,7 @@ describe('likes', () => {
 
   it('unlikes an image on a second marker click', () => {
     const container = mountGallery([makePhoto('p1')], { 'data-like-enabled': 'true' });
-    window.GridGallery.create(container);
+    window.RichmanGallery.create(container);
 
     clickLike(container, 'p1');
     clickLike(container, 'p1');
@@ -107,7 +107,7 @@ describe('likes', () => {
   it('notifies the page with the id and the new state on every change', () => {
     const { calls, onLike } = collectLikes();
     const container = mountGallery([makePhoto('p1')], { 'data-like-enabled': 'true' });
-    window.GridGallery.create(container, { onLike });
+    window.RichmanGallery.create(container, { onLike });
 
     clickLike(container, 'p1');
     clickLike(container, 'p1');
@@ -124,7 +124,7 @@ describe('likes', () => {
     const container = mountGallery([makePhoto('p1', { 'data-liked': true })], {
       'data-like-enabled': 'true'
     });
-    window.GridGallery.create(container);
+    window.RichmanGallery.create(container);
 
     const img = container.querySelector('img[data-id="p1"]');
     const marker = likeMarkerFor(container, 'p1');
@@ -135,7 +135,7 @@ describe('likes', () => {
 
   it('rolls back a like to its previous state when persistence fails', () => {
     const container = mountGallery([makePhoto('p1')], { 'data-like-enabled': 'true' });
-    const gallery = window.GridGallery.create(container);
+    const gallery = window.RichmanGallery.create(container);
 
     clickLike(container, 'p1');
     gallery.setLiked('p1', false);
@@ -149,7 +149,7 @@ describe('likes', () => {
 
   it('rolls forward a server-confirmed like that was not yet applied', () => {
     const container = mountGallery([makePhoto('p1')], { 'data-like-enabled': 'true' });
-    const gallery = window.GridGallery.create(container);
+    const gallery = window.RichmanGallery.create(container);
 
     gallery.setLiked('p1', true);
 
@@ -161,14 +161,14 @@ describe('likes', () => {
 
   it('sets the like-position attribute when configured', () => {
     const container = mountGallery([makePhoto('p1')]);
-    window.GridGallery.create(container, { like: true, likePosition: 'bottom-right' });
+    window.RichmanGallery.create(container, { like: true, likePosition: 'bottom-right' });
 
     expect(container.getAttribute('data-like-position')).toBe('bottom-right');
   });
 
   it('enables likes from options even without the data attribute', () => {
     const container = mountGallery([makePhoto('p1')]);
-    window.GridGallery.create(container, { like: true });
+    window.RichmanGallery.create(container, { like: true });
 
     expect(container.hasAttribute('data-like-enabled')).toBe(true);
     expect(container.querySelectorAll('.rmg-like-marker').length).toBe(1);

@@ -1,11 +1,11 @@
-export interface GridGalleryHooks {
+export interface RichmanGalleryHooks {
   onLike?: (photoId: string, liked: boolean) => void;
   onComments?: (photoId: string) => void;
   onSelect?: (photoId: string) => void;
   onUnselect?: (photoId: string) => void;
 }
 
-export interface GridGalleryOptions {
+export interface RichmanGalleryOptions {
   gaplength?: number;
   columns?: number;
   multiSelect?: boolean;
@@ -21,11 +21,11 @@ export interface GridGalleryOptions {
 
 declare global {
   interface Window {
-    GridGallery: GridGalleryApi;
-    GRID_GALLERY_HOOKS?: GridGalleryHooks;
+    RichmanGallery: RichmanGalleryApi;
+    RICHMAN_GALLERY_HOOKS?: RichmanGalleryHooks;
   }
   interface HTMLElement {
-    _gallery?: GridGalleryInstance;
+    _gallery?: RichmanGalleryInstance;
   }
 }
 
@@ -33,11 +33,11 @@ declare const __RMG_VERSION__: string;
 
 export const VERSION: string = __RMG_VERSION__;
 
-export interface GridGalleryApi {
+export interface RichmanGalleryApi {
   version: string;
-  create(containerOrSelector: HTMLElement | string, options?: GridGalleryOptions): GridGalleryInstance | null;
-  get(containerOrSelector: HTMLElement | string): GridGalleryInstance | null;
-  initAll(options?: GridGalleryOptions): GridGalleryInstance[];
+  create(containerOrSelector: HTMLElement | string, options?: RichmanGalleryOptions): RichmanGalleryInstance | null;
+  get(containerOrSelector: HTMLElement | string): RichmanGalleryInstance | null;
+  initAll(options?: RichmanGalleryOptions): RichmanGalleryInstance[];
 }
 
 type LikeHandler = (photoId: string, liked: boolean) => void;
@@ -94,12 +94,12 @@ function showMessage(message: string, type: string = 'info'): void {
   }, 3000);
 }
 
-function readWindowHooks(): GridGalleryHooks {
-  return window.GRID_GALLERY_HOOKS || {};
+function readWindowHooks(): RichmanGalleryHooks {
+  return window.RICHMAN_GALLERY_HOOKS || {};
 }
 
 // ===== GALLERY CLASS =====
-export class GridGalleryInstance {
+export class RichmanGalleryInstance {
   container: HTMLElement;
   images: HTMLImageElement[] = [];
   selectedIds: string[] = [];
@@ -115,7 +115,7 @@ export class GridGalleryInstance {
   clickHandler: ((event: Event) => void) | null = null;
   keyHandler: ((event: KeyboardEvent) => void) | null = null;
 
-  constructor(container: HTMLElement, options: GridGalleryOptions = {}) {
+  constructor(container: HTMLElement, options: RichmanGalleryOptions = {}) {
     this.container = container;
 
     this.container._gallery = this;
@@ -123,7 +123,7 @@ export class GridGalleryInstance {
     this.init(options);
   }
 
-  init(options: GridGalleryOptions = {}): void {
+  init(options: RichmanGalleryOptions = {}): void {
     const galleryBox = this.container.querySelector('.rmg-grid');
     if (galleryBox) {
       this.images = Array.from(galleryBox.querySelectorAll('img'));
@@ -140,7 +140,7 @@ export class GridGalleryInstance {
     this.setupObservers();
   }
 
-  configure(options: GridGalleryOptions = {}): void {
+  configure(options: RichmanGalleryOptions = {}): void {
     if (options.columns !== undefined) {
       this.container.setAttribute('data-columns', String(options.columns));
     }
@@ -923,85 +923,92 @@ export class GridGalleryInstance {
 }
 
 // ===== PUBLIC API =====
-export const GridGallery: GridGalleryApi = {
-  version: VERSION,
-  create(containerOrSelector: HTMLElement | string, options: GridGalleryOptions = {}): GridGalleryInstance | null {
-    let container: HTMLElement | null;
-    if (typeof containerOrSelector === 'string') {
-      container = document.querySelector(containerOrSelector);
-      if (!container) {
-        console.error(`GridGallery: Container "${containerOrSelector}" not found`);
-        return null;
-      }
-    } else {
-      container = containerOrSelector;
+export const version: string = VERSION;
+
+export function create(
+  containerOrSelector: HTMLElement | string,
+  options: RichmanGalleryOptions = {}
+): RichmanGalleryInstance | null {
+  let container: HTMLElement | null;
+  if (typeof containerOrSelector === 'string') {
+    container = document.querySelector(containerOrSelector);
+    if (!container) {
+      console.error(`RichmanGallery: Container "${containerOrSelector}" not found`);
+      return null;
     }
+  } else {
+    container = containerOrSelector;
+  }
+
+  if (container._gallery) {
+    return container._gallery;
+  }
+
+  return new RichmanGalleryInstance(container, options);
+}
+
+export function get(containerOrSelector: HTMLElement | string): RichmanGalleryInstance | null {
+  let container: HTMLElement | null;
+  if (typeof containerOrSelector === 'string') {
+    container = document.querySelector(containerOrSelector);
+  } else {
+    container = containerOrSelector;
+  }
+
+  return container ? container._gallery || null : null;
+}
+
+export function initAll(options: RichmanGalleryOptions = {}): RichmanGalleryInstance[] {
+  const containers = document.querySelectorAll('.rmg-gallery');
+  const galleries: RichmanGalleryInstance[] = [];
+
+  containers.forEach((container) => {
+    if (!(container instanceof HTMLElement)) return;
 
     if (container._gallery) {
-      return container._gallery;
+      galleries.push(container._gallery);
+      return;
     }
 
-    return new GridGalleryInstance(container, options);
-  },
+    const galleryOptions: RichmanGalleryOptions = { ...options };
 
-  get(containerOrSelector: HTMLElement | string): GridGalleryInstance | null {
-    let container: HTMLElement | null;
-    if (typeof containerOrSelector === 'string') {
-      container = document.querySelector(containerOrSelector);
-    } else {
-      container = containerOrSelector;
+    if (container.hasAttribute('data-multiselect-enabled')) {
+      galleryOptions.multiSelect = true;
+    }
+    if (container.hasAttribute('data-max-selectable')) {
+      galleryOptions.maxSelectable = parseInt(container.getAttribute('data-max-selectable') || '', 10);
+    }
+    if (container.hasAttribute('data-like-enabled')) {
+      galleryOptions.like = true;
+    }
+    if (container.hasAttribute('data-comments-enabled')) {
+      galleryOptions.comments = true;
+    }
+    if (container.hasAttribute('data-like-position')) {
+      galleryOptions.likePosition = container.getAttribute('data-like-position') || undefined;
+    }
+    if (container.hasAttribute('data-columns')) {
+      const parsed = parseInt(container.getAttribute('data-columns') || '', 10);
+      if (!isNaN(parsed)) galleryOptions.columns = parsed;
     }
 
-    return container ? container._gallery || null : null;
-  },
+    const gallery = new RichmanGalleryInstance(container, galleryOptions);
+    galleries.push(gallery);
+  });
 
-  initAll(options: GridGalleryOptions = {}): GridGalleryInstance[] {
-    const containers = document.querySelectorAll('.rmg-gallery');
-    const galleries: GridGalleryInstance[] = [];
+  return galleries;
+}
 
-    containers.forEach((container) => {
-      if (!(container instanceof HTMLElement)) return;
+// Convenience object (ESM import surface) + browser global.
+// In the IIFE build the outer `var RichmanGallery` makes the global the
+// exports bag, which contains `create`/`get`/`initAll`/`version` directly.
+export const RichmanGallery: RichmanGalleryApi = { version, create, get, initAll };
 
-      if (container._gallery) {
-        galleries.push(container._gallery);
-        return;
-      }
-
-      const galleryOptions: GridGalleryOptions = { ...options };
-
-      if (container.hasAttribute('data-multiselect-enabled')) {
-        galleryOptions.multiSelect = true;
-      }
-      if (container.hasAttribute('data-max-selectable')) {
-        galleryOptions.maxSelectable = parseInt(container.getAttribute('data-max-selectable') || '', 10);
-      }
-      if (container.hasAttribute('data-like-enabled')) {
-        galleryOptions.like = true;
-      }
-      if (container.hasAttribute('data-comments-enabled')) {
-        galleryOptions.comments = true;
-      }
-      if (container.hasAttribute('data-like-position')) {
-        galleryOptions.likePosition = container.getAttribute('data-like-position') || undefined;
-      }
-      if (container.hasAttribute('data-columns')) {
-        const parsed = parseInt(container.getAttribute('data-columns') || '', 10);
-        if (!isNaN(parsed)) galleryOptions.columns = parsed;
-      }
-
-      const gallery = new GridGalleryInstance(container, galleryOptions);
-      galleries.push(gallery);
-    });
-
-    return galleries;
-  }
-};
-
-window.GridGallery = GridGallery;
+window.RichmanGallery = RichmanGallery;
 
 // ===== AUTO-INITIALIZATION =====
 function autoInit(): void {
-  window.GridGallery.initAll();
+  window.RichmanGallery.initAll();
 }
 
 if (document.readyState === 'loading') {
@@ -1017,7 +1024,7 @@ const bodyObserver = new MutationObserver((mutations) => {
       if (isElement(node) && node.matches && node.matches('.rmg-gallery')) {
         const galleryContainer = node as HTMLElement;
         if (!galleryContainer._gallery) {
-          const options: GridGalleryOptions = {};
+          const options: RichmanGalleryOptions = {};
           if (galleryContainer.hasAttribute('data-multiselect-enabled')) options.multiSelect = true;
           if (galleryContainer.hasAttribute('data-max-selectable')) options.maxSelectable = parseInt(galleryContainer.getAttribute('data-max-selectable') || '', 10);
           if (galleryContainer.hasAttribute('data-like-enabled')) options.like = true;
@@ -1028,7 +1035,7 @@ const bodyObserver = new MutationObserver((mutations) => {
             if (!isNaN(parsed)) options.columns = parsed;
           }
 
-          new GridGalleryInstance(galleryContainer, options);
+          new RichmanGalleryInstance(galleryContainer, options);
         }
       }
     });

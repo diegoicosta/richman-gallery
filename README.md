@@ -16,12 +16,12 @@ No dependencies — a single small JS file that works from a `<script>` tag or a
 <script src="richman-gallery.min.js"></script>
 ```
 
-The library exposes `window.GridGallery`, and its version as `GridGallery.version`.
+The library exposes `window.RichmanGallery`, and its version as `RichmanGallery.version`.
 
 ### ES module
 
 ```js
-import { GridGallery, VERSION } from 'richman-gallery';
+import { RichmanGallery, VERSION } from 'richman-gallery';
 import 'richman-gallery/richman-gallery.css';
 ```
 
